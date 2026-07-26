@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบเสนอราคา - ระบบอัจฉริยะ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --radius: 12px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px 16px;
+            color: var(--gray-900);
+        }
+
+        .page-wrapper {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: var(--gray-700);
+            font-size: 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 32px 24px;
+            margin-bottom: 24px;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-bar {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        .status-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .status-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .status-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 240px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: var(--gray-50);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            background: white;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: var(--gray-100);
+            padding: 14px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        td {
+            padding: 12px 10px;
+            text-align: center;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 14px;
+        }
+
+        td input {
+            padding: 8px 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .total-section {
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid var(--gray-200);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 15px;
+        }
+
+        .total-row.total-final {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--danger);
+            padding-top: 12px;
+            border-top: 2px solid var(--gray-300);
+            margin-top: 8px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        .btn-danger { background: var(--danger); color: white; padding: 6px 10px; font-size: 13px; }
+
+        .signature-area {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px dashed var(--gray-300);
+        }
+
+        .sig-box {
+            text-align: center;
+            min-width: 200px;
+            padding-top: 40px;
+        }
+
+        .sig-box p {
+            font-size: 14px;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .no-print { display: none !important; }
+            .card { box-shadow: none; padding: 0; }
+            .total-section { background: white; border: 1px solid #ddd; }
+        }
+
+        @media (max-width: 640px) {
+            .card { padding: 20px 16px; }
+            .header h1 { font-size: 24px; }
+            .btn { flex: 1 1 100%; justify-content: center; }
+            .signature-area { justify-content: center; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header">
+            <h1>📄 ใบเสนอราคา</h1>
+            <p>กรอกข้อมูลครบถ้วน แล้วบันทึกหรือพิมพ์ได้ทันที</p>
+        </div>
+
+        <div class="card">
+            <div id="statusBar" class="status-bar"></div>
+
+            <!-- ข้อมูลผู้เสนอราคา -->
+            <div class="section-title">🏢 ข้อมูลผู้เสนอราคา</div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>ชื่อกิจการ/บริษัท</label>
+                        <input type="text" id="sellerName" placeholder="ชื่อธุรกิจของคุณ">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>เลขประจำตัวผู้เสียภาษี</label>
+                        <input type="text" id="sellerTax" placeholder="เลขที่ภาษี 13 หลัก">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>ที่อยู่เต็ม</label>
+                        <textarea id="sellerAddr" rows="2" placeholder="ที่อยู่ เบอร์โทร อีเมล"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ข้อมูลลูกค้า -->
+            <div class="section-title">👥 ข้อมูลลูกค้า</div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>ชื่อลูกค้า/บริษัท</label>
+                        <input type="text" id="custName" placeholder="ชื่อผู้รับใบเสนอราคา">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>เลขที่เอกสาร / วันที่ออก</label>
+                        <input type="text" id="quoteNo" placeholder="Q-2026-07-001" style="margin-bottom:8px;">
+                        <input type="date" id="quoteDate">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>กำหนดชำระเงิน / วันหมดอายุ</label>
+                        <input type="text" id="paymentTerm" placeholder="ภายใน 15 วัน" style="margin-bottom:8px;">
+                        <input type="date" id="expireDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- รายการสินค้า -->
+            <div class="section-title">📦 รายการสินค้า/บริการ</div>
+            <div class="table-wrapper">
+                <table id="itemTable">
+                    <thead>
+                        <tr>
+                            <th width="6%">ลำดับ</th>
+                            <th width="38%">รายการ</th>
+                            <th width="12%">จำนวน</th>
+                            <th width="10%">หน่วย</th>
+                            <th width="15%">ราคาต่อหน่วย</th>
+                            <th width="15%">จำนวนเงิน</th>
+                            <th width="4%" class="no-print">ลบ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemBody">
+                        <tr>
+                            <td>1</td>
+                            <td><input type="text" placeholder="ชื่อสินค้า" data-name="desc"></td>
+                            <td><input type="number" min="1" value="1" style="width:70px;" data-name="qty" onchange="calcRow(this)"></td>
+                            <td><input type="text" value="ชิ้น" style="width:60px;" data-name="unit"></td>
+                            <td><input type="number" min="0" step="0.01" value="0" style="width:90px;" data-name="price" onchange="calcRow(this)"></td>
+                            <td class="row-total">0.00</td>
+                            <td class="no-print"><button class="btn btn-danger" onclick="delRow(this)">×</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn btn-primary no-print" onclick="addRow()">+ เพิ่มรายการสินค้า</button>
+
+            <!-- สรุปราคา -->
+            <div class="total-section">
+                <div class="total-row">
+                    <span>รวมก่อนภาษี</span>
+                    <span id="subTotal">0.00 บาท</span>
+                </div>
+                <div class="total-row">
+                    <span>ภาษีมูลค่าเพิ่ม 7%</span>
+                    <span id="vat">0.00 บาท</span>
+                </div>
+                <div class="total-row">
+                    <span>ส่วนลด</span>
+                    <span id="discount">0.00 บาท</span>
+                </div>
+                <div class="no-print" style="margin:12px 0; display:flex; gap:16px; flex-wrap:wrap;">
+                    <div>
+                        <label style="display:inline;">ส่วนลด (บาท): </label>
+                        <input type="number" id="discountInput" min="0" step="0.01" value="0" style="width:120px;" onchange="calcTotal()">
+                    </div>
+                    <div>
+                        <label style="display:inline;">คิดภาษี 7%: </label>
+                        <input type="checkbox" id="vatCheck" checked onchange="calcTotal()">
+                    </div>
+                </div>
+                <div class="total-row total-final">
+                    <span>รวมทั้งสิ้น</span>
+                    <span id="grandTotal">0.00 บาท</span>
+                </div>
+            </div>
+
+            <!-- ลายเซ็น -->
+            <div class="signature-area">
+                <div class="sig-box">
+                    <p>ลงชื่อผู้เสนอราคา</p>
+                    <p>(............................................)</p>
+                    <p>วันที่ .... / .... / ......</p>
+                </div>
+                <div class="sig-box">
+                    <p>ลงชื่อผู้เห็นชอบราคา</p>
+                    <p>(............................................)</p>
+                    <p>วันที่ .... / .... / ......</p>
+                </div>
+            </div>
+
+            <!-- ปุ่มทำงาน -->
+            <div class="btn-group no-print">
+                <button class="btn btn-success" onclick="saveToSheet()">💾 บันทึกเข้า Google Sheets</button>
+                <button class="btn btn-primary" onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button>
+                <button class="btn btn-warning" onclick="location.reload()">🔄 เริ่มใหม่</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🔴 ใส่ลิงก์ Apps Script ของคุณตรงนี้
+        const APPS_SCRIPT_URL = "ใส่ลิงก์เว็บแอปของคุณตรงนี้";
+
+        // ตั้งค่าวันที่อัตโนมัติ
+        document.getElementById('quoteDate').valueAsDate = new Date();
+        document.getElementById('expireDate').valueAsDate = new Date(Date.now() + 7*24*60*60*1000);
+
+        // แสดงสถานะการทำงาน
+        function showStatus(msg, type='info') {
+            const bar = document.getElementById('statusBar');
+            bar.style.display = 'block';
+            bar.className = `status-bar status-${type}`;
+            bar.textContent = msg;
+            setTimeout(() => bar.style.display = 'none', 4000);
+        }
+
+        // เพิ่มรายการ
+        function addRow() {
+            const tbody = document.getElementById('itemBody');
+            const num = tbody.rows.length + 1;
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${num}</td>
+                <td><input type="text" placeholder="ชื่อสินค้า" data-name="desc"></td>
+                <td><input type="number" min="1" value="1" style="width:70px;" data-name="qty" onchange="calcRow(this)"></td>
+                <td><input type="text" value="ชิ้น" style="width:60px;" data-name="unit"></td>
+                <td><input type="number" min="0" step="0.01" value="0" style="width:90px;" data-name="price" onchange="calcRow(this)"></td>
+                <td class="row-total">0.00</td>
+                <td class="no-print"><button class="btn btn-danger" onclick="delRow(this)">×</button></td>
+            `;
+            tbody.appendChild(newRow);
+            calcTotal();
+        }
+
+        // ลบรายการ
+        function delRow(btn) {
+            const row = btn.closest('tr');
+            if (document.getElementById('itemBody').rows.length > 1) {
+                row.remove();
+                document.querySelectorAll('#itemBody tr').forEach((r,i) => r.cells[0].textContent = i+1);
+                calcTotal();
+            } else {
+                showStatus('ต้องมีอย่างน้อย 1 รายการครับ', 'error');
+            }
+        }
+
+        // คำนวณแถว
+        function calcRow(input) {
+            const row = input.closest('tr');
+            const qty = parseFloat(row.querySelector('[data-name=qty]').value) || 0;
+            const price = parseFloat(row.querySelector('[data-name=price]').value) || 0;
+            row.querySelector('.row-total').textContent = (qty * price).toFixed(2);
+            calcTotal();
+        }
+
+        // คำนวณรวมทั้งหมด
+        function calcTotal() {
+            let subTotal = 0;
+            document.querySelectorAll('.row-total').forEach(c => subTotal += parseFloat(c.textContent) || 0);
+            const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+            const isVat = document.getElementById('vatCheck').checked;
+            const vat = isVat ? (subTotal * 0.07).toFixed(2) : '0.00';
+            const grandTotal = (subTotal + parseFloat(vat) - discount).toFixed(2);
+
+            document.getElementById('subTotal').textContent = subTotal.toFixed(2) + ' บาท';
+            document.getElementById('vat').textContent = vat + ' บาท';
+            document.getElementById('discount').textContent = discount.toFixed(2) + ' บาท';
+            document.getElementById('grandTotal').textContent = grandTotal + ' บาท';
+        }
+
+        // บันทึกเข้า Google Sheets
+        async function saveToSheet() {
+            showStatus('⏳ กำลังบันทึกข้อมูล...', 'info');
+
+            const items = Array.from(document.querySelectorAll('#itemBody tr')).map(row => {
+                return `${row.querySelector('[data-name=desc]').value || 'ไม่ระบุ'} x${row.querySelector('[data-name=qty]').value} = ${row.querySelector('.row-total').textContent} บาท`;
+            }).join(' | ');
+
+            const data = {
+                date: document.getElementById('quoteDate').value,
+                quoteNo: document.getElementById('quoteNo').value || 'ไม่ระบุ',
+                custName: document.getElementById('custName').value || 'ไม่ระบุ',
+                subTotal: document.getElementById('subTotal').textContent,
+                vat: document.getElementById('vat').textContent,
+                discount: document.getElementById('discount').textContent,
+                grandTotal: document.getElementById('grandTotal').textContent,
+                items: items
+            };
+
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    showStatus('✅ บันทึกข้อมูลลง Google Sheets เรียบร้อย!', 'success');
+                } else throw new Error(result.msg || 'ไม่ทราบสาเหตุ');
+            } catch (err) {
+                showStatus('❌ ผิดพลาด: ' + err.message, 'error');
+            }
+        }
+
+        calcTotal();
+    </script>
+</body>
+</html>
